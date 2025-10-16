@@ -1,0 +1,51 @@
+{
+  "blog-nuevo-post": {
+    "descripcion": "Se activa cuando se publica un nuevo artículo en el blog.",
+    "acciones": [
+      {
+        "tipo": "enviar_notificacion",
+        "params": {
+          "canal": "telegram",
+          "destinatario_id": "TU_TELEGRAM_USER_ID",
+          "mensaje": "¡Nuevo post publicado! Revisa '{payload.titulo}' en el blog."
+        }
+      },
+      {
+        "tipo": "procesar_imagen",
+        "params": {
+          "url_origen": "{payload.imagen_portada_url}",
+          "marca_de_agua": "mi-blog.com",
+          "formatos": ["thumbnail", "banner_social"]
+        }
+      },
+      {
+        "tipo": "archivar_evento",
+        "params": {
+          "fuente": "blog",
+          "evento": "nuevo_post"
+        }
+      }
+    ]
+  },
+  "usuario-registrado": {
+    "descripcion": "Se activa cuando un nuevo usuario se registra en la plataforma.",
+    "acciones": [
+      {
+        "tipo": "enviar_notificacion",
+        "params": {
+          "canal": "email",
+          "destinatario": "{payload.email_usuario}",
+          "asunto": "¡Bienvenido a la plataforma!",
+          "plantilla_html": "bienvenida.html"
+        }
+      },
+      {
+        "tipo": "archivar_evento",
+        "params": {
+          "fuente": "plataforma_usuarios",
+          "evento": "registro"
+        }
+      }
+    ]
+  }
+}

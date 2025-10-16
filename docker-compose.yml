@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: werken-rabbitmq
+    restart: unless-stopped
+    ports:
+      # Puerto para que tus aplicaciones se conecten (AMQP)
+      - "5672:5672"
+      # Puerto para la interfaz de administración web
+      - "15672:15672"
+
+  ingestor:
+    build: ./ingestor
+    container_name: werken-ingestor
+    restart: unless-stopped
+    ports: 
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+
+  workflow-engine:
+    build: ./workflow-engine
+    container_name: werken-engine
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./workflow-engine:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+
+

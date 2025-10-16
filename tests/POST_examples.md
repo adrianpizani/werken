@@ -1,0 +1,1 @@
+curl -X POST http://localhost:8000/webhook/mi-workflow -H "Content-Type: application/json" -d'{"user_id": 123, "data": "some important data"}'
