@@ -14,16 +14,16 @@ channel = None
 
 for i in range(MAX_RETRIES):
     try:
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq')) # Docker will solve it
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq', heartbeat=600)) # Docker will solve it
         channel = connection.channel()
         channel.queue_declare(queue='received_webhooks', durable=True) #queue will persist after rabbit restart
-        print("✅ Conexión con RabbitMQ establecida exitosamente.")
+        print("✅ Connection with RabbitMQ established successfully.")
         break
     except pika.exceptions.AMQPConnectionError as e:
-        print(f"Error conectandose a la cola RabbitMQ: {e}. Reintentando en {RETRY_DELAY}")
+        print(f"Error connecting to RabbitMQ queue: {e}. Retrying in {RETRY_DELAY}")
         time.sleep(RETRY_DELAY)
 else:
-    print("❌ No se pudo establecer conexión con RabbitMQ después de varios intentos. Saliendo.")
+    print("❌ Could not establish connection to RabbitMQ after several attempts. Exiting.")
     sys.exit(1)
 
 @app.post("/webhook/{workflow_id}")
@@ -50,7 +50,7 @@ async def receive_webhook(workflow_id: str, request: Request):
         return {"status": 'ok', "message": "message delivered to the queue"}
 
     except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="Petition body request not JSON valid")
+        raise HTTPException(status_code=400, detail="Invalid JSON in request body")
     
     except Exception as e:
         print(f"Error processing the webhoook {e}")

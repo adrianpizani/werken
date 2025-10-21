@@ -32,9 +32,9 @@ else:
 
 def callback(ch, method, properties, body):
     try:
-        mensaje = json.loads(body)
-        workflow_id = mensaje.get('workflow_id')
-        payload = mensaje.get('payload')
+        message = json.loads(body)
+        workflow_id = message.get('workflow_id')
+        payload = message.get('payload')
         print(f"▶️ Engine: Processing webhook for '{workflow_id}'...")
 
         if workflow_id in WORKFLOWS:
@@ -62,7 +62,7 @@ def callback(ch, method, properties, body):
 
 # Consumption
 channel.basic_consume('received_webhooks', on_message_callback=callback)
-print('[*] The workflow its waiting for messages. To quit, press CTRL+C')
+print('[*] The workflow is waiting for messages. To quit, press CTRL+C')
 channel.start_consuming()
 
 

@@ -5,7 +5,7 @@ import time
 
 def test_workflow():
     # Send a webhook to the ingestor
-    workflow_id = "mi-workflow"
+    workflow_id = "user-registered"
     payload = {"user_id": 123, "data": "some important data"}
     response = requests.post(f"http://localhost:8000/webhook/{workflow_id}", json=payload)
     assert response.status_code == 200
@@ -29,12 +29,12 @@ def test_workflow():
     assert len(messages) == 2
 
     # Check the first action
-    assert messages[0]['action_type'] == 'enviar_email'
-    assert messages[0]['action_params']['destinatario'] == 'gaby@example.com'
+    assert messages[0]['action_type'] == 'send_notification'
+    assert messages[0]['action_params']['channel'] == 'email'
 
     # Check the second action
-    assert messages[1]['action_type'] == 'log_evento'
-    assert messages[1]['action_params']['nivel'] == 'info'
+    assert messages[1]['action_type'] == 'archive_event'
+    assert messages[1]['action_params']['event'] == 'registration'
 
     print("✅ Integration test passed!")
 

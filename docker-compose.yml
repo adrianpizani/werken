@@ -11,6 +11,9 @@ services:
       - "5672:5672"
       # Puerto para la interfaz de administración web
       - "15672:15672"
+    networks:
+      - werken_net
+
 
   ingestor:
     build: ./ingestor
@@ -20,6 +23,8 @@ services:
       - "8000:8000"
     depends_on:
       - rabbitmq
+    networks:
+      - werken_net
 
   workflow-engine:
     build: ./workflow-engine
@@ -31,5 +36,13 @@ services:
       - ./workflow-engine:/app
     environment:
       - PYTHONUNBUFFERED=1
+    networks:
+      - werken_net
+
+networks:
+  werken_net:
+    # 'werken_net' es en realidad
+    name: werken_common_network
+    external: true
 
 

@@ -68,6 +68,8 @@ curl -X POST http://localhost:8000/webhook/mi-workflow \
 }'
 ```
 
+curl -X POST -H "Content-Type: application/json" -d '{"user": "adrian", "actions": "enviar_notificacion"}' http://localhost:8000/webhook/blog-nuevo-post
+
 This will publish a message to the `received_webhooks` queue. The `workflow-engine` will then process it and publish the corresponding actions to the `required_actions` queue.
 
 ## Testing
